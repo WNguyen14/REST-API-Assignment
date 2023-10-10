@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Movie Ticket Booking API
+  version: 10.20.30
+  description: An API for purchasing movie tickets online.
+paths:
+  /tickets:
+    post:
+      summary: Purchase a movie ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "TicketPurchaseReq"
+      responses:
+        201:
+          description: Ticket purchased successfully
+          content:
+            application/json:
+              example:
+                id: 1
+                movie_id: 1
+                user_id: 1
+                ticket_price: 10.99
+                purchase_date: "2023-10-10T12:00:00Z"
+        404:
+          description: Ticket not found
+          content:
+             application/json: {}
+  /payments:
+    post:
+      summary: Process a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "PaymentReq"
+      responses:
+        200:
+          description: Payment processed successfully
+          content:
+            application/json:
+              example:
+                transaction_id: 1
+                amount: 10.99
+        404:
+          description: Payment not found
+          content:
+             application/json: {}
+/payments/{transaction_id}:
+    get:
+      summary: Get information about a specific payment transaction
+      parameters:
+        - name: transaction_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Payment information retrieved successfully
+          content:
+            application/json:
+              example:
+                transaction_id: "1"
+                amount: 10.99
+        404:
+          description: Payment transaction not found
+    delete:
+      summary: Cancel a payment transaction
+      parameters:
+        - name: transaction_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Payment transaction canceled successfully
+        504:
+          description: Payment server failed
